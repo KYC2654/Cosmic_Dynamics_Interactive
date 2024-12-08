@@ -1,0 +1,79 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\title{Interactive Cosmic Dynamics Simulation}
+\author{Keith Chiang}
+\date{2024}
+
+\begin{document}
+\maketitle
+
+\section{Introduction}
+The goal of this project is to create a simulation that models the evolution of the universe by integrating the Friedmann equation. The simulation provides an interactive platform for visualizing how the scale factor changes over time and how different cosmic parameters affect the expansion of the universe. The Friedmann equation is a fundamental equation in cosmology that describes the expansion of the universe. Understanding the impact of various cosmic parameters on the evolution of the universe is essential for students and researchers in cosmology and astrophysics.
+
+\section{Theoretical Framework}
+\subsection{The Friedmann Equation}
+The Friedmann equation describes the expansion of a homogeneous and isotropic universe:
+
+\[
+\left(\frac{\dot{a}}{a}\right)^2 = H_0^2 \left(\Omega_m \cdot a^{-3} + \Omega_\Lambda + (1 - \Omega_m - \Omega_\Lambda) \cdot a^{-2} \right)
+\]
+
+Where:
+\begin{itemize}
+\item $a(t)$: Scale factor at time $t$, representing the relative size of the universe
+\item $H_0$: Hubble constant, measuring the current expansion rate
+\item $\Omega_m$: Matter density parameter
+\item $\Omega_\Lambda$: Dark energy density parameter
+\end{itemize}
+
+To solve for the scale factor evolution, we rearrange this into:
+
+\[
+\dot{a} = a \cdot H_0 \cdot \sqrt{\Omega_m \cdot a^{-3} + \Omega_\Lambda + (1 - \Omega_m - \Omega_\Lambda) \cdot a^{-2}}
+\]
+
+\section{Implementation}
+\subsection{Python Code}
+\begin{lstlisting}[language=Python]
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.integrate import odeint
+import ipywidgets as widgets
+from ipywidgets import interact
+
+def friedman_eq(a, t, omega_m, omega_lambda, h0):
+    dadt = a * h0 * np.sqrt(omega_m * a**(-3) + omega_lambda + 
+           (1 - omega_m - omega_lambda) * a**(-2))
+    return dadt
+
+def plot_cosmic_dynamics(omega_m, omega_lambda, h0):
+    a0 = 0.01
+    t = np.linspace(0, 13.8, 1000)
+    a = odeint(friedman_eq, a0, t, args=(omega_m, omega_lambda, h0))
+    
+    plt.figure(figsize=(10, 6))
+    plt.plot(t, a)
+    plt.title('Scale Factor a(t) over Time')
+    plt.xlabel('Time (billion years)')
+    plt.ylabel('Scale Factor a(t)')
+    plt.grid(True)
+    plt.show()
+\end{lstlisting}
+
+\section{Results and Analysis}
+The simulation successfully demonstrates how different cosmic parameters influence the universe's expansion:
+
+\begin{itemize}
+\item Increasing $\Omega_m$ leads to stronger gravitational effects, slowing expansion
+\item Higher values of $\Omega_\Lambda$ result in accelerated expansion in later stages
+\item The Hubble constant $H_0$ affects the overall expansion rate
+\end{itemize}
+
+\section{Conclusion}
+This project demonstrates the power of numerical methods in understanding complex cosmological phenomena. The interactive simulation serves as an effective educational tool for exploring cosmic dynamics and understanding the universe's evolution under different parameter regimes. Future improvements could include adding radiation density ($\Omega_r$) effects, incorporating non-flat cosmologies ($k \neq 0$), and including an addition section for the temperature distribution of the cosmos.
+
+\end{document}
